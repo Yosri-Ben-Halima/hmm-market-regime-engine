@@ -54,7 +54,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
             "font.family": "monospace",
         }
     )
-    fig = plt.figure(figsize=(22, 30), facecolor=BG)
+    fig = plt.figure(figsize=(22, 26), facecolor=BG)
     fig.suptitle(
         f"  S&P 500 ({ticker}) │ Regime Forecasting Engine │ {datetime.today():%Y-%m-%d}",
         color=TXT,
@@ -65,7 +65,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
         y=0.997,
     )
     gs = gridspec.GridSpec(
-        7,
+        6,
         4,
         figure=fig,
         hspace=0.55,
@@ -176,43 +176,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
     ax3.plot(df.index, df["rvol_60"], color="#a78bfa", lw=0.6, ls=":", label="60D RVol")
     _ax(ax3, title="Volatility: EWMA (λ=0.94) vs Realized (Ann. %)", yl="%")
 
-    ax4 = fig.add_subplot(gs[3, 0])
-    ax4.plot(df.index, df["rsi_14"], color="#a78bfa", lw=0.8)
-    ax4.axhline(70, color="#ef4444", lw=0.5, ls="--", alpha=0.6)
-    ax4.axhline(30, color="#22c55e", lw=0.5, ls="--", alpha=0.6)
-    ax4.axhline(50, color=GRID, lw=0.4)
-    ax4.set_ylim(0, 100)
-    _ax(ax4, title="RSI (14)", leg=False)
-
-    ax5 = fig.add_subplot(gs[3, 1])
-    colors_m = ["#22c55e" if v >= 0 else "#ef4444" for v in df["macd_hist"]]
-    ax5.bar(df.index, df["macd_hist"], color=colors_m, width=1, alpha=0.8)
-    ax5.axhline(0, color=GRID, lw=0.4)
-    _ax(ax5, title="MACD Histogram (12/26/9)", leg=False)
-
-    ax6 = fig.add_subplot(gs[3, 2])
-    ax6.fill_between(df.index, rm["dd_series"], 0, alpha=0.35, color="#ef4444")
-    ax6.plot(df.index, rm["dd_series"], color="#ef4444", lw=0.6)
-    ax6.axhline(0, color=GRID, lw=0.4)
-    _ax(ax6, title="Drawdown (%)", leg=False, yl="%")
-
-    ax7 = fig.add_subplot(gs[3, 3])
-    rs = rm["roll_sharpe"].dropna()
-    ax7.fill_between(
-        rs.index,
-        rs,
-        0,
-        alpha=0.25,
-        color=np.where(rs.values >= 0, "#22c55e", "#ef4444")[0]
-        if len(rs)
-        else "#22c55e",
-    )
-    ax7.plot(rs.index, rs, color="#60a5fa", lw=0.8)
-    ax7.axhline(0, color=GRID, lw=0.5)
-    ax7.axhline(1, color="#22c55e", lw=0.4, ls="--", alpha=0.5)
-    _ax(ax7, title="Rolling Sharpe (252D)", leg=False)
-
-    ax8 = fig.add_subplot(gs[4, :2])
+    ax8 = fig.add_subplot(gs[3, :2])
     bands = fc["bands"]
     days = np.arange(fc["horizon"] + 1)
     col_r = REGIME_COLORS[cur]
@@ -233,7 +197,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
         yl="Price ($)",
     )
 
-    ax9 = fig.add_subplot(gs[4, 2])
+    ax9 = fig.add_subplot(gs[3, 2])
     ro = fc["regime_occ"]
     ax9.stackplot(
         days,
@@ -246,7 +210,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
     )
     _ax(ax9, title="Forecast Regime Occupancy", xl="Days Ahead")
 
-    ax10 = fig.add_subplot(gs[4, 3])
+    ax10 = fig.add_subplot(gs[3, 3])
     tr = fc["terminal_rets"] * 100
     ax10.hist(tr, bins=60, density=True, color=col_r, alpha=0.65, edgecolor="none")
     xf = np.linspace(tr.min(), tr.max(), 200)
@@ -260,7 +224,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
     ax10.axvline(0, color=GRID, lw=0.5)
     _ax(ax10, title="21D Terminal Return Dist.", xl="Return (%)")
 
-    ax11 = fig.add_subplot(gs[5, 0])
+    ax11 = fig.add_subplot(gs[4, 0])
     r = df["log_ret"].values * 100
     ax11.hist(r, bins=80, density=True, color=BLUE, alpha=0.45, edgecolor="none")
     xr = np.linspace(r.min(), r.max(), 200)
@@ -270,7 +234,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
     ax11.axvline(rm["var95"] * 100, color="#ef4444", lw=0.8, ls="--", label="VaR 95%")
     _ax(ax11, title="Daily Return Distribution", xl="Log-Return (%)")
 
-    ax12 = fig.add_subplot(gs[5, 1])
+    ax12 = fig.add_subplot(gs[4, 1])
     (osm, osr), (slope, intercept, _) = stats.probplot(
         df["log_ret"].values, dist="norm"
     )
@@ -284,7 +248,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
         leg=False,
     )
 
-    ax13 = fig.add_subplot(gs[5, 2])
+    ax13 = fig.add_subplot(gs[4, 2])
     for k in range(3):
         m = df["regime"] == k
         ax13.scatter(
@@ -302,7 +266,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
         yl="Daily Return (%)",
     )
 
-    ax14 = fig.add_subplot(gs[5, 3])
+    ax14 = fig.add_subplot(gs[4, 3])
     T = transition_matrix(df["regime"].values)
     im = ax14.imshow(T, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
     for i in range(3):
@@ -330,7 +294,7 @@ def build_tearsheet(df, fc, rm, ticker, out="tearsheet.png"):
         color=TXT, labelcolor=TXT
     )
 
-    ax15 = fig.add_subplot(gs[6, :])
+    ax15 = fig.add_subplot(gs[5, :])
     ax15.axis("off")
     rows = []
     for k in range(3):

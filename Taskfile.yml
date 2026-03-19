@@ -1,0 +1,22 @@
+version: "3"
+
+tasks:
+  run:
+    desc: Run the regime detection pipeline
+    cmds:
+      - python run.py
+
+  test:
+    desc: Run the test suite
+    cmds:
+      - pytest
+
+  test-cov:
+    desc: Run tests with coverage
+    cmds:
+      - pytest --cov=regime_engine
+
+  install:
+    desc: Install the package in editable mode with dev dependencies
+    cmds:
+      - pip install -e ".[dev]"

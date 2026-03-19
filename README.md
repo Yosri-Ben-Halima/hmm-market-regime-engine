@@ -149,6 +149,12 @@ pip install -e ".[dev]"
 
 ## Usage
 
+### Quick Start
+
+```bash
+task run
+```
+
 ### CLI
 
 ```bash
@@ -172,6 +178,10 @@ results = run(ticker="^GSPC", lookback=1260, n_paths=2000, horizon=21, out_dir="
 ## Running Tests
 
 ```bash
+task test
+task test-cov
+
+# Or directly
 pytest
 pytest --cov=regime_engine
 pytest tests/test_vol.py -v
