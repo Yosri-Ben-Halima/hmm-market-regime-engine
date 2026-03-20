@@ -13,7 +13,7 @@ def test_smoke(regime_df):
         with patch("regime_engine.pipeline.fetch_ohlcv", return_value=regime_df.drop(columns=["regime", "ewma_vol_daily"])):
             result = run(ticker="TEST", lookback=200, n_paths=50, horizon=5, out_dir=tmpdir)
 
-        assert set(result.keys()) == {"df", "model", "forecast", "risk", "tearsheet"}
+        assert set(result.keys()) == {"df", "model", "forecast", "risk", "tearsheet", "summary"}
 
         # tearsheet PNG exists on disk
         assert os.path.exists(result["tearsheet"])

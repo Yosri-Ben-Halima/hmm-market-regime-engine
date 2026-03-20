@@ -9,7 +9,9 @@ from .pipeline import run
 
 warnings.filterwarnings("ignore")
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s │ %(levelname)s │ %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s │ %(levelname)-7s │ %(name)-30s │ %(message)s",
+    datefmt="%H:%M:%S",
 )
 
 

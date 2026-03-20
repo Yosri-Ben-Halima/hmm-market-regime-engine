@@ -1,14 +1,19 @@
 """Risk analytics: VaR, CVaR, drawdown, Sharpe, Sortino, Calmar."""
 
+import logging
+
 import numpy as np
 import pandas as pd
 from scipy import stats
 from scipy.stats import skew, kurtosis
 
+log = logging.getLogger(__name__)
+
 
 def compute_risk(df):
     rets = df["log_ret"].dropna().values
     n = len(rets)
+    log.info(f"  Computing risk metrics over {n} daily returns")
     mu = rets.mean() * 252
     sig = rets.std() * np.sqrt(252)
 
@@ -41,6 +46,15 @@ def compute_risk(df):
     avg_g = rets[rets > 0].mean() if (rets > 0).any() else 0
     avg_l = rets[rets < 0].mean() if (rets < 0).any() else 0
     glr = abs(avg_g / avg_l) if avg_l != 0 else 0
+
+    log.info(
+        f"  Ann.Return={mu * 100:+.2f}%  Ann.Vol={sig * 100:.2f}%  "
+        f"Sharpe={sharpe:.2f}  Sortino={sortino:.2f}"
+    )
+    log.info(
+        f"  MaxDD={max_dd:.2f}%  VaR95={var95 * 100:.2f}%  CVaR95={cvar95 * 100:.2f}%  "
+        f"Skew={sk:.3f}  Kurt={ku:.2f}"
+    )
 
     return {
         "mu": mu,

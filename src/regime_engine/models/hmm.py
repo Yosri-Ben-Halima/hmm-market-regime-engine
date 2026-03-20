@@ -64,6 +64,7 @@ def fit_hmm(df, n_states=HMM_N_STATES, n_iter=HMM_N_ITER, n_init=HMM_N_INIT):
     )
 
     best, best_score = None, -np.inf
+    n_converged, n_failed = 0, 0
     for seed in range(n_init):
         m = hmm.GaussianHMM(
             n_components=n_states,
@@ -79,11 +80,18 @@ def fit_hmm(df, n_states=HMM_N_STATES, n_iter=HMM_N_ITER, n_init=HMM_N_INIT):
         try:
             m.fit(Xs)
             s = m.score(Xs)
+            converged = m.monitor_.converged
+            if converged:
+                n_converged += 1
             if s > best_score:
                 best_score, best = s, m
         except Exception:
+            n_failed += 1
             continue
 
+    log.info(
+        f"  {n_init} inits: {n_converged} converged, {n_init - n_converged - n_failed} not converged, {n_failed} failed"
+    )
     log.info(f"  Best log-likelihood: {best_score:.2f}")
     raw_states = best.predict(Xs)
 

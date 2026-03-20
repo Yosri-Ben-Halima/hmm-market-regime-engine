@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def add_features(df):
+    log.info(f"  Input: {len(df)} rows, {len(df.columns)} columns")
     c, h, l_, v = (df[x].values for x in ["close", "high", "low", "volume"])
 
     for p in [20, 50, 100, 200]:
@@ -76,8 +77,10 @@ def add_features(df):
     df["roll_skew_20"] = df["log_ret"].rolling(20).skew()
     df["roll_kurt_20"] = df["log_ret"].rolling(20).kurt()
 
+    before = len(df)
     df.dropna(inplace=True)
-    log.info(f"  {len(df.columns)} features, {len(df)} rows after dropna")
+    dropped = before - len(df)
+    log.info(f"  Output: {len(df.columns)} features, {len(df)} rows  (dropped {dropped} NaN rows)")
     return df
 
 

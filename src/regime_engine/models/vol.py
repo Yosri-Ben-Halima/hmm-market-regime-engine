@@ -60,7 +60,7 @@ def fit_vol_model_per_regime(df):
             continue
 
         try:
-            nu, t_loc, t_scale = stats.t.fit(r, floc=None)
+            nu, t_loc, t_scale = stats.t.fit(r)
             nu = float(np.clip(nu, 3.0, 50.0))
             t_scale = float(max(t_scale, 1e-6))
         except Exception as e:
