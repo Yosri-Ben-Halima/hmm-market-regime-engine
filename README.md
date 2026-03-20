@@ -4,7 +4,7 @@
 
 A quantitative research tool that detects market regimes in equity index data using a Gaussian Hidden Markov Model (HMM) with 3 states (Bull/Trend, Transition, Crisis/Vol), then forecasts forward price paths via regime-switching Monte Carlo simulation.
 
-The volatility model uses **RiskMetrics EWMA (λ = 0.94)** for time-varying volatility combined with **per-regime Student-t MLE** for honest tail estimation — no GARCH recursion, no unit-root risk, no hard caps needed.
+The volatility model uses **RiskMetrics EWMA (λ = 0.94)** for time-varying volatility combined with **per-regime Student-t MLE** for honest tail estimation.
 
 **Output artifacts:**
 
@@ -23,7 +23,7 @@ OHLCV Data → Feature Engineering → HMM Regime Detection & Interpretation
 
 ### 1. Log Returns
 
-$$r_t = \ln\!\left(\frac{P_t}{P_{t-1}}\right)$$
+$$r_t = \ln\left(\frac{P_t}{P_{t-1}}\right)$$
 
 Where $P_t$ is the closing price at time $t$.
 
