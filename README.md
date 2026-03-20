@@ -139,7 +139,7 @@ $$\text{Calmar} = \frac{\mu_{\text{ann}}}{|\text{MaxDD}|}$$
 Requires **Python 3.10+**.
 
 ```bash
-git clone https://github.com/<your-org>/hmm-market-regime-engine.git
+git clone https://github.com/Yosri-Ben-Halima/hmm-market-regime-engine.git
 cd hmm-market-regime-engine
 pip install -e ".[dev]"
 ```
