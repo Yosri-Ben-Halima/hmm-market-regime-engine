@@ -81,7 +81,7 @@ $$z_t \sim t_{\nu_k} \Big/ \sqrt{\nu_k / (\nu_k - 2)}, \quad \varepsilon_t = \si
 
 **Price evolution (Itô-corrected GBM):**
 
-$$P_{t+1} = P_t \exp\!\left(\mu_k - \tfrac{1}{2}\sigma_t^2 + \varepsilon_t\right)$$
+$$P_{t+1} = P_t \exp\left(\mu_k - \tfrac{1}{2}\sigma_t^2 + \varepsilon_t\right)$$
 
 **Regime-switch vol blending** (on transition from regime $k$ to $k'$):
 
