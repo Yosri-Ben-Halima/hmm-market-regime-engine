@@ -7,13 +7,14 @@ A quantitative research tool that detects market regimes in equity index data us
 The volatility model uses **RiskMetrics EWMA (λ = 0.94)** for time-varying volatility combined with **per-regime Student-t MLE** for honest tail estimation — no GARCH recursion, no unit-root risk, no hard caps needed.
 
 **Output artifacts:**
+
 - A multi-panel institutional tear sheet (PNG) covering regime classification, volatility, risk analytics, Monte Carlo fan charts, and regime statistics.
 - A console summary with current regime probabilities, forecast bands, and risk metrics.
 
 ## Architecture
 
-```
-OHLCV Data → Feature Engineering → HMM Regime Detection
+```bash
+OHLCV Data → Feature Engineering → HMM Regime Detection & Interpretation
     → Student-t MLE + EWMA Vol → Monte Carlo Forecast
     → Risk Analytics → Tear Sheet
 ```
@@ -55,10 +56,6 @@ $$\text{Sharpe}_k^{\text{daily}} = \frac{\bar{r}_k - r_f^{\text{daily}}}{\sigma_
 $$\text{MaxDD}_k = \min_t \left(\sum_{i=1}^{t} r_i - \max_{j \le t} \sum_{i=1}^{j} r_i\right), \quad \forall\, t : S_t = k$$
 
 ### 4. Volatility Model — RiskMetrics EWMA + Student-t MLE
-
-GJR-GARCH was replaced with this two-component approach because:
-- EWMA provides adaptive, time-varying volatility without GARCH convergence issues or unit-root risk.
-- Student-t MLE provides honest per-regime tail thickness (ν) without conflating tail estimation with volatility dynamics.
 
 **EWMA variance recursion** (applied over the full return series):
 
@@ -123,7 +120,7 @@ $$\text{Calmar} = \frac{\mu_{\text{ann}}}{|\text{MaxDD}|}$$
 ## Repo Walkthrough
 
 | File | Responsibility |
-|------|---------------|
+| ---- | ------------- |
 | `src/regime_engine/config.py` | All constants: regime labels/colours, HMM hyperparameters, palette |
 | `src/regime_engine/data/loader.py` | `fetch_ohlcv()` — yfinance data acquisition, log/simple returns |
 | `src/regime_engine/features/engineering.py` | `add_features()`, `_rsi()`, `_adx()` — 20+ OHLCV-derived signals |
@@ -194,9 +191,9 @@ The tear sheet PNG contains 7 rows of panels:
 1. **KPI Banner** — Last close, annualised return/vol, Sharpe, Sortino, max drawdown, VaR/CVaR, skewness, kurtosis, active regime, confidence.
 2. **Price + Regime Overlay** — Close with EMA50/EMA200 and colour-coded regime background shading.
 3. **Posterior Probabilities + Volatility** — Stacked regime posteriors from HMM; EWMA vol (λ=0.94) vs 20D/60D realised vol so users can see time-varying vol responsiveness.
-5. **Monte Carlo Forecast** — Fan chart with percentile bands; forecast regime occupancy; terminal return distribution with fitted normal overlay.
-6. **Distributional Analysis** — Daily return histogram with VaR overlay, Q-Q plot, regime scatter (vol vs return), empirical transition matrix heatmap.
-7. **Regime Summary Table** — Per-regime frequency, annualised return/vol, Sharpe, VaR, current posterior.
+4. **Monte Carlo Forecast** — Fan chart with percentile bands; forecast regime occupancy; terminal return distribution with fitted normal overlay.
+5. **Distributional Analysis** — Daily return histogram with VaR overlay, Q-Q plot, regime scatter (vol vs return), empirical transition matrix heatmap.
+6. **Regime Summary Table** — Per-regime frequency, annualised return/vol, Sharpe, VaR, current posterior.
 
 ## Disclaimer
 
