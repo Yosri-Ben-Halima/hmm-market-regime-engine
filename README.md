@@ -194,7 +194,6 @@ The tear sheet PNG contains 7 rows of panels:
 1. **KPI Banner** — Last close, annualised return/vol, Sharpe, Sortino, max drawdown, VaR/CVaR, skewness, kurtosis, active regime, confidence.
 2. **Price + Regime Overlay** — Close with EMA50/EMA200 and colour-coded regime background shading.
 3. **Posterior Probabilities + Volatility** — Stacked regime posteriors from HMM; EWMA vol (λ=0.94) vs 20D/60D realised vol so users can see time-varying vol responsiveness.
-4. **Technical Indicators** — RSI(14), MACD histogram, drawdown series, rolling 252D Sharpe.
 5. **Monte Carlo Forecast** — Fan chart with percentile bands; forecast regime occupancy; terminal return distribution with fitted normal overlay.
 6. **Distributional Analysis** — Daily return histogram with VaR overlay, Q-Q plot, regime scatter (vol vs return), empirical transition matrix heatmap.
 7. **Regime Summary Table** — Per-regime frequency, annualised return/vol, Sharpe, VaR, current posterior.
